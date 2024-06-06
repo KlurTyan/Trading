@@ -3,3 +3,4 @@ fastapi[all]
 psycopg2-binary
 python-dotenv
 sqlalchemy
+fastapi-users[sqlalchemy]
