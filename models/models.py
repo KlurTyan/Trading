@@ -1,7 +1,6 @@
 import datetime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import (
+    Boolean,
     MetaData,
     Integer,
     String,
@@ -10,39 +9,30 @@ from sqlalchemy import (
     Table,
     Column,
     JSON,
-    create_engine,
 )
 
 metadata = MetaData()
 
-roles = Table(
-    "roles",
+role = Table(
+    "role",
     metadata,
     Column("id", Integer, primary_key=True),
     Column("name", String, nullable=False),  # nullable - Не может быть пустым
     Column("permission", JSON),
 )
 
-users = Table(
-    "users",
+user = Table(
+    "user",
     metadata,
     Column("id", Integer, primary_key=True),
     Column("email", String, nullable=False),
     Column("username", String, nullable=False),
-    Column("password", String, nullable=False),
+    Column("hashed_password", String, nullable=False),
     Column(
         "registered_at", TIMESTAMP, default=datetime.datetime.now(datetime.timezone.utc)
     ),
-    Column("role_id", Integer, ForeignKey("roles.id")),
+    Column("role_id", Integer, ForeignKey("role.id")),
+    Column("is_active", Boolean, default=True, nullable=False),
+    Column("is_superuser", Boolean, default=False, nullable=False),
+    Column("is_verified", Boolean, default=False, nullable=False),
 )
-
-# # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
-# SQLALCHEMY_DATABASE_URL = ""
-
-# engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-# )
-
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base = declarative_base()
