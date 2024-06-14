@@ -5,7 +5,6 @@ from contextlib import asynccontextmanager
 import time
 
 from redis import asyncio as aioredis
-from redis.asyncio.connection import ConnectionPool
 
 from fastapi import Depends, FastAPI
 from fastapi_users import FastAPIUsers, fastapi_users
@@ -21,6 +20,7 @@ from auth.shemas import UserCreate, UserRead
 from operations.router import router as router_operation
 
 
+@asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     redis = aioredis.from_url("redis://localhost")
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
