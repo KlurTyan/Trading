@@ -7,3 +7,5 @@ fastapi-users[sqlalchemy]
 asyncpg
 fastapi-cache2[redis]
 redis
+celery
+flower
