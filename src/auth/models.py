@@ -1,6 +1,4 @@
 import datetime
-
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import (
     Boolean,
     MetaData,
@@ -21,7 +19,8 @@ from sqlalchemy import (
 
 from fastapi_users.db import SQLAlchemyBaseUserTable
 
-metadata = MetaData()
+from src.database import Base, metadata
+
 
 role = Table(
     "role",
@@ -33,31 +32,28 @@ role = Table(
 
 # Императивный способ
 
-user = Table(
-    "user",
-    metadata,
-    Column("id", Integer, primary_key=True),
-    Column("email", String, nullable=False),
-    Column("username", String, nullable=False),
-    Column("hashed_password", String, nullable=False),
-    Column(
-        "registered_at", TIMESTAMP, default=datetime.datetime.now(datetime.timezone.utc)
-    ),
-    Column("role_id", Integer, ForeignKey("role.id")),
-    Column("is_active", Boolean, default=True, nullable=False),
-    Column("is_superuser", Boolean, default=False, nullable=False),
-    Column("is_verified", Boolean, default=False, nullable=False),
-)
-
-
-class Base(DeclarativeBase):
-    pass
-
+# user = Table(
+#     "user",
+#     metadata,
+#     Column("id", Integer, primary_key=True),
+#     Column("email", String, nullable=False),
+#     Column("username", String, nullable=False),
+#     Column("hashed_password", String, nullable=False),
+#     Column(
+#         "registered_at", TIMESTAMP, default=datetime.datetime.now(datetime.timezone.utc)
+#     ),
+#     Column("role_id", Integer, ForeignKey("role.id")),
+#     Column("is_active", Boolean, default=True, nullable=False),
+#     Column("is_superuser", Boolean, default=False, nullable=False),
+#     Column("is_verified", Boolean, default=False, nullable=False),
+# )
 
 # Декларативный способ
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):
+    __tablename__ = "user"
+
     id = Column(Integer, primary_key=True)
     email = Column(String, nullable=False)
     username = Column(String, nullable=False)
